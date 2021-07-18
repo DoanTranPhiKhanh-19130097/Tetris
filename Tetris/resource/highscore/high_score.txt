@@ -1,0 +1,24 @@
+oo	4760
+zz	280
+zz	240
+zz	240
+zz	200
+zz	240
+ss	200
+zz	200
+zz	200
+cc	280
+ nn	440
+ nn	440
+ nn	240
+ nn	240
+ nn	240
+ nn	200
+ nn	240
+ nn	320
+ nn	280
+ nn	280
+ nn	240
+ nn	280
+ nn	280
+ nn	240
