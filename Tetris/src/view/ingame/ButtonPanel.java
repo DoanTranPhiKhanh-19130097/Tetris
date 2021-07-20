@@ -43,6 +43,7 @@ public class ButtonPanel extends JPanel implements MouseListener, Observer {
 	}
 
 	private void setFrame() {
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
 		setPreferredSize(new Dimension(240, 500));
 		setBackground(new Color(252, 252, 252));
 		setBorder(BorderFactory.createBevelBorder(1));
@@ -51,7 +52,6 @@ public class ButtonPanel extends JPanel implements MouseListener, Observer {
 	}
 
 	private void displayTitle() {
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
 		add(title = new JLabel(new ImageIcon("resource/img/200_150.png")));
 		title.setPreferredSize(new Dimension(200, 150));
 		title.setHorizontalAlignment(JLabel.CENTER);
