@@ -28,30 +28,46 @@ public class NextShapePanel extends JPanel implements Observer {
 	private JLabel title;
 
 	public NextShapePanel(IInGame view, Observable observableModel, Observable observableLanguage) {
-		
 		this.view = view;
 		colorFactory = new ColorFactory();
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
-		setPreferredSize(new Dimension(240, 240));
-		setBackground(new Color(252, 252, 252));
-		setBorder(BorderFactory.createBevelBorder(1));
-
+		
+		displayTitle();
+		setFrame();
+	}
+	
+	private void displayTitle() {
 		setLayout(new BorderLayout());
 		add(title = new JLabel("NEXT"), BorderLayout.SOUTH);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font(Font.DIALOG, Font.BOLD, 25));
 	}
+	
+	private void setFrame() {
+		setPreferredSize(new Dimension(240, 240));
+		setBackground(new Color(252, 252, 252));
+		setBorder(BorderFactory.createBevelBorder(1));
+	}
 
 	public void update(Observable o, Object arg) {
+		updateGame(o);
+		updateLanguage(o);
+		
+	}
+	
+	private void updateGame(Observable o) {
 		if (o instanceof Game) {
 			Game game = (Game) o;
 			nextShape = game.getNextShape();
 			repaint();
 		}
+	}
+	
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
-			Language lan = (Language) o;
-			title.setText(lan.getNextName());
+			Language tran = (Language) o;
+			title.setText(tran.getNextName());
 		}
 	}
 

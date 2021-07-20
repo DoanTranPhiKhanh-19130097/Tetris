@@ -1,10 +1,13 @@
 package view.setting;
 
+import java.util.Observable;
+
+import translation.Language;
+
 public interface ISetting {
-	public void changeVolumeBgMs(int value);
-	public void changeVolumeEffect(int value);
-	public void setStateBgMs();
-	public void setStateEffect();
+	public void changeVolumeSoundTrack(int value);
+	public void changeVolumeEffectMusic(int value);
+	public void setStateSoundTrack();
+	public void setStateEffectMusic();
 	public void show();
 }
-	

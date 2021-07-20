@@ -15,81 +15,21 @@ import obj.Player;
 import obj.PlayerList;
 
 public class DataManager {
-	//lay danh sach nguoi choi tu file
-	public static PlayerList loadPlayerList(String fileName, Observable observable) {
-		PlayerList playerList = new PlayerList();
 
-		BufferedReader bufferedReader = null;
-		FileReader fileReader = null;
 
-		try {
-			File file = new File(fileName);
-
-			if (file.exists()) {
-
-				fileReader = new FileReader(file);
-				bufferedReader = new BufferedReader(fileReader);
-
-				String line = bufferedReader.readLine();
-
-				while (line != null) {
-
-					StringTokenizer tokenizer = new StringTokenizer(line, "\t");
-
-					String name = tokenizer.nextToken();
-					int score = Integer.parseInt(tokenizer.nextToken());
-					
-					playerList.add(new Player(name, score, observable));
-
-					line = bufferedReader.readLine();
-
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bufferedReader != null)
-					bufferedReader.close();
-				if (fileReader != null)
-					fileReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return playerList;
+	public static PlayerList loadPlayerListFromScoreFile(String scoreFileName, Observable observable) {
+		return ReadResultPlayers.loadPlayerListFromScoreFile(scoreFileName, observable);
 	}
-
-	//luu thanh tich vao file
-	public static void saveAchievements(Player player, String fileName) {
-
-		BufferedWriter bufferedWriter = null;
-		FileWriter fileWriter = null;
-
-		try {
-
-			File file = new File(fileName);
-
-			if (!file.exists())
-				file.createNewFile();
-
-			fileWriter = new FileWriter(file.getAbsoluteFile(), true);
-			bufferedWriter = new BufferedWriter(fileWriter);
-
-			bufferedWriter.write(player.toString() + "\n");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bufferedWriter != null)
-					bufferedWriter.close();
-				if (fileWriter != null)
-					fileWriter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	
+	public static void addPlayerToPlayerList(File fileScore, Observable observable) throws IOException {
+		ReadResultPlayers.addPlayerToPlayerList(fileScore, observable);
+	}
+	
+	public static void saveAchievements(Player player, String scoreFileName) {
+		SaveResultPlayers.saveAchievements(player, scoreFileName);
+	}
+	
+	public static void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
+		SaveResultPlayers.writePlayerToScoreFile(scoreFile, player);
 	}
 }

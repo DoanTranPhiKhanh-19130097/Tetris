@@ -34,65 +34,90 @@ public class BoardGamePanel extends JPanel implements Observer {
 	private JLabel signalLb;
 	private int prepareTime;
 	private IColorFactory colorFactory;
-	private String gameOverName="GAME OVER", readyName="READY!!!", startName="START!!!";
-	
+	private String gameOverName = "GAME OVER", readyName = "READY!!!", startName = "START!!!";
+
 	public BoardGamePanel(IInGame view, Observable observableModel, Observable observableLanguage) {
-		this.view = view;
-		tileSize = IGame.TILE_SIZE;
+
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
+
+		this.view = view;
+		tileSize = IGame.TILE_SIZE;
 		colorFactory = new ColorFactory();
 
+		setFrame();
+		displaySignalLb();
+	}
+
+	private void setFrame() {
 		setPreferredSize(new Dimension(IGame.WIDTH * IGame.TILE_SIZE, IGame.HEIGHT * IGame.TILE_SIZE));
 		setBackground(new Color(232, 228, 240));
 		setBorder(BorderFactory.createStrokeBorder(new BasicStroke(2)));
 		setLayout(new BorderLayout());
+	}
+
+	private void displaySignalLb() {
 		add(signalLb = new JLabel(""), BorderLayout.CENTER);
 		signalLb.setHorizontalAlignment(JLabel.CENTER);
 		signalLb.setFont(new Font(Font.DIALOG, Font.BOLD, 60));
-
 	}
 
-	// update observer
 	public void update(Observable o, Object arg) {
-		
+		updateBoardGame(o);
+		updateLanguage(o);
+	}
+
+	private void updateBoardGame(Observable o) {
 		if (o instanceof Game) {
 			Game game = (Game) o;
 			board = game.getBoard();
 			currentShape = game.getCurrentShape();
 			prepareTime = game.getPrepareTime();
-
-			if (signalLb != null) {
-				if (game.isGameOver())
-					signalLb.setText(gameOverName);
-				else
-					switch (prepareTime) {
-					case 2:
-						signalLb.setText(readyName);
-						break;
-					case 1:
-						signalLb.setText(startName);
-						break;
-					default:
-						signalLb.setText("");
-						break;
-					}
-			}
-			repaint();
+			changeSignalLbText(game);
 		}
-	
+	}
+
+	private void changeSignalLbText(Game game) {
+		if (signalLb != null) {
+			if (game.isGameOver())
+				signalLb.setText(gameOverName);
+			else
+				switch (prepareTime) {
+				case 2:
+					signalLb.setText(readyName);
+					break;
+				case 1:
+					signalLb.setText(startName);
+					break;
+				default:
+					signalLb.setText("");
+					break;
+				}
+		}
+		repaint();
+	}
+
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			gameOverName = lan.getGameOverName();
 			readyName = lan.getReadyName();
-			startName = lan.getStartIconName();
-		}
+			startName = lan.getStartIconName();		}
 	}
 
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// ve shape
+		drawShape(g);
+		if (board != null) {
+			drawBoard(g);
+			// ve cac khoi da roi xuong
+			drawBlockFixedly(g);
+		}
+	}
+
+	public void drawShape(Graphics g) {
 		if (currentShape != null) {
 			int[][] coords = currentShape.getCoords();
 			for (int i = 0; i < coords.length; i++) {
@@ -110,26 +135,26 @@ public class BoardGamePanel extends JPanel implements Observer {
 				}
 			}
 		}
+	}
 
-		// ve bang
-		if (board != null) {
-			g.setColor(new Color(0, 0, 0));
-			// ve duong ke bang
-			for (int i = 0; i < board.length; i++) {
-				g.drawLine(0, i * tileSize, tileSize * board[i].length, i * tileSize);
-			}
-			for (int j = 0; j < board[0].length; j++) {
-				g.drawLine(j * tileSize, 0, j * tileSize, tileSize * board.length);
-			}
-			// ve cac ganh da roi xuong
-			for (int i = 0; i < board.length; i++) {
-				for (int j = 0; j < board[i].length; j++) {
-					if (board[i][j] != 0) {
-						g.setColor(colorFactory.creatColor(board[i][j]));
-						g.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
-						g.setColor(Color.BLACK);
-						g.drawRect(j * tileSize, i * tileSize, tileSize, tileSize);
-					}
+	public void drawBoard(Graphics g) {
+		g.setColor(new Color(0, 0, 0));
+		for (int i = 0; i < board.length; i++) {
+			g.drawLine(0, i * tileSize, tileSize * board[i].length, i * tileSize);
+		}
+		for (int j = 0; j < board[0].length; j++) {
+			g.drawLine(j * tileSize, 0, j * tileSize, tileSize * board.length);
+		}
+	}
+
+	public void drawBlockFixedly(Graphics g) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] != 0) {
+					g.setColor(colorFactory.creatColor(board[i][j]));
+					g.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
+					g.setColor(Color.BLACK);
+					g.drawRect(j * tileSize, i * tileSize, tileSize, tileSize);
 				}
 			}
 		}

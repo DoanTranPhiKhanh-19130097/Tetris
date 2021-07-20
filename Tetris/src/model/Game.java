@@ -1,16 +1,17 @@
 package model;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import translation.Chinese;
-import translation.English;
+import translation.TranslateChinese;
+import translation.TranslateEnglish;
 import translation.Language;
-import translation.VietNamese;
+import translation.TranslateVietNamese;
 import audio.Audio;
 import data.DataManager;
 import factory.IShapeFactory;
@@ -21,25 +22,25 @@ import obj.PlayerList;
 import view.language.ILanguage;
 
 public class Game extends Observable implements IGame {
-	private int[][] board;
-	private AShape currentShape;
-	private AShape nextShape;
+
 	private boolean inGame;
 	private boolean pause;
 	private boolean gameOver;
 	private long startTime;
 	private int prepareTime;
+
+	private int[][] board;
+	private AShape currentShape;
+	private AShape nextShape;
 	private IShapeFactory shapeFactory;
+	private ArrayList<AShape> storeShapes;
+
 	private int score;
 	private PlayerList playerList;
 	private Player player;
-	private boolean stateBgMs;
-	private boolean stateEffect;
-	private int valueMs;
-	private int valueEffect;
-	private Audio collisionEffect, bgMs;
-	private ArrayList<AShape> storeShapes;
 
+	private Audio playSoundtrack;
+	private Audio playEffectMusic;
 
 	public Game() {
 		playerList = new PlayerList();
@@ -47,42 +48,21 @@ public class Game extends Observable implements IGame {
 		shapeFactory = new ShapeRandomFactory();
 		pause = true;
 		gameOver = false;
-		stateBgMs = true;
-		stateEffect = true;
-		valueMs = 80;
-		valueEffect = 80;
+
 		startTime = System.nanoTime();
 		storeShapes = new ArrayList<AShape>();
-		playerList = DataManager.loadPlayerList("resource/highscore/high_score.txt", this);
+		playerList = DataManager.loadPlayerListFromScoreFile("resource/highscore/high_score.txt", this);
 		try {
-			bgMs = new Audio("resource/sound/bg_music.wav");
-		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
+			playSoundtrack = new Audio("resource/sound/bg_music.wav", false, 80);
+			playEffectMusic = new Audio("resource/sound/effect_clear.wav", false, 80);
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
+
 	}
 
-	// play audio
-	private void playCollisionEffect() {
-		try {
-			collisionEffect = new Audio("resource/sound/effect_clear.wav");
-			collisionEffect.changVolume(valueEffect);
-			collisionEffect.start();
-		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// update game
 	@Override
-	public void update() {
+	public void updateInGame() {
 		if (inGame && !pause && !gameOver) {
 			if (prepareTime <= 0)
 				currentShape.update();
@@ -94,25 +74,19 @@ public class Game extends Observable implements IGame {
 				}
 			}
 		}
-		
-		if (collisionEffect != null)
-			collisionEffect.changVolume(valueEffect);
-		if (bgMs != null)
-			bgMs.changVolume(valueMs);
-		if (inGame && stateBgMs && !pause) {
-			bgMs.start();
-			bgMs.loop();
-		}
-		if (!inGame || !stateBgMs || pause)
-			bgMs.stop();
 
-		// update cho observer
+		playSoundtrack.playSound(pause, true);
+		updateToObserver();
+
+	}
+
+	public void updateToObserver() {
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	// set up shape 3 hinh gan nhat khong trung nhau
-		public void setNextShape() {
+	public void setNextShape() {
 		nextShape = shapeFactory.creatShape(this);
 		int i = storeShapes.size() - 1;
 		int count = 0;
@@ -158,11 +132,10 @@ public class Game extends Observable implements IGame {
 				board[height][col] = board[row][col];
 			}
 			if (count < board[0].length)
-				height--;	
+				height--;
 			else {
 				score += count * 10;
-				if (stateEffect)
-					playCollisionEffect();
+				playEffectMusic.playSound(pause, false);
 			}
 		}
 	}
@@ -205,8 +178,9 @@ public class Game extends Observable implements IGame {
 		pause = false;
 		prepareTime = 3;
 		gameOver = false;
-		if (inGame) 
+		if (inGame) {
 			setPlayer(player.getName());
+		}
 		setNextShape();
 		setCurrentShape();
 		super.notifyObservers();
@@ -221,16 +195,6 @@ public class Game extends Observable implements IGame {
 	public void setPlayer(String name) {
 		player = new Player(name, score, this);
 		player.setPlaying(true);
-	}
-
-	@Override
-	public void changeVolumeBgMs(int value) {
-		this.valueMs = value;
-	}
-
-	@Override
-	public void changeVolumeEffect(int value) {
-		this.valueEffect = value;
 	}
 
 	@Override
@@ -252,28 +216,38 @@ public class Game extends Observable implements IGame {
 		return playerList;
 	}
 
-	public void setStateBgMs() {
-		this.stateBgMs = !stateBgMs;
+	@Override
+	public void changeVolumeSoundtrack(int value) {
+		playSoundtrack.setValueSound(value);
 	}
 
-	public void setStateEffect() {
-		this.stateEffect = !stateEffect;
+	@Override
+	public void changeVolumeEffect(int value) {
+		playEffectMusic.setValueSound(value);
+	}
+
+	public void setStateSoundtrack() {
+		playSoundtrack.setMute(!playSoundtrack.getMute());
+	}
+
+	public void setStateEffectMusic() {
+		playEffectMusic.setMute(!playEffectMusic.getMute());
 	}
 
 	public int getValueEffect() {
-		return valueEffect;
+		return playEffectMusic.getValueSound();
 	}
 
-	public int getValueMs() {
-		return valueMs;
+	public int getValueSoundtrack() {
+		return playSoundtrack.getValueSound();
 	}
 
-	public boolean isRunningBgMs() {
-		return stateBgMs;
+	public boolean isRunningSoundtrack() {
+		return playSoundtrack.getMute();
 	}
 
 	public boolean isRunningEffect() {
-		return stateEffect;
+		return playEffectMusic.getMute();
 	}
 
 	public AShape getNextShape() {
@@ -302,19 +276,18 @@ public class Game extends Observable implements IGame {
 
 	@Override
 	public void tranlateEnglish() {
-		Language.getInstance().setLanguage(new English());
+		Language.getInstance().setLanguage(new TranslateEnglish());
 	}
 
 	@Override
 	public void tranlateVietnamese() {
-		Language.getInstance().setLanguage(new VietNamese());
+		Language.getInstance().setLanguage(new TranslateVietNamese());
 
 	}
 
 	@Override
 	public void tranlateChinese() {
-		Language.getInstance().setLanguage(new Chinese());
+		Language.getInstance().setLanguage(new TranslateChinese());
 	}
-	
-	
+
 }

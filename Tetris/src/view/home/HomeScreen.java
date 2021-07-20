@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,12 +41,32 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 		add(backgoundLb = new JLabel(new ImageIcon("resource/img/background_tetris.png")));
 		backgoundLb.setLayout(null);
 
+		pack();
+
+		setFrame();
+		displayNameLb();
+		displayNameTf();
+		displayButtons();
+	}
+
+	private void setFrame() {
+		setTitle("TETRIS");
+		setIconImage(new ImageIcon("resource/img/iconGame.png").getImage());
+		setVisible(true);
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	private void displayNameLb() {
 		backgoundLb.add(nameLb = new JLabel());
 		nameLb.setBounds(171, 275, 125, 30);
 		nameLb.setForeground(Color.WHITE);
 		nameLb.setHorizontalAlignment(JLabel.CENTER);
 		nameLb.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
+	}
 
+	private void displayNameTf() {
 		backgoundLb.add(nameTf = new JTextField());
 		nameTf.setBounds(171, 310, 125, 28);
 		nameTf.setHorizontalAlignment(JTextField.CENTER);
@@ -58,7 +80,9 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 				start();
 			}
 		});
+	}
 
+	private void displayButtons() {
 		backgoundLb.add(start = setUpBtn());
 		start.setBounds(177, 385, 112, 38);
 		backgoundLb.add(setting = setUpBtn());
@@ -71,14 +95,6 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 		language.setBounds(177, 597, 112, 38);
 		backgoundLb.add(exit = setUpBtn());
 		exit.setBounds(177, 650, 112, 38);
-
-		pack();
-		setTitle("TETRIS");
-		setIconImage(new ImageIcon("resource/img/iconGame.png").getImage());
-		setVisible(true);
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private JButton setUpBtn() {
@@ -191,18 +207,19 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 
 	@Override
 	public void update(Observable o, Object arg) {
+		updateLanguage(o);
+	}
+
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			nameLb.setText(lan.getYourName());
-			if (start != null && highScore != null && setting != null && tutorial != null && language != null
-					&& exit != null) {
-				start.setText(lan.getStartName());
-				highScore.setText(lan.getHighScoreName());
-				setting.setText(lan.getSettingName());
-				tutorial.setText(lan.getTutorialName());
-				language.setText(lan.getLanguageName());
-				exit.setText(lan.getExitName());
-			}
+			start.setText(lan.getStartName());
+			highScore.setText(lan.getHighScoreName());
+			setting.setText(lan.getSettingName());
+			tutorial.setText(lan.getTutorialName());
+			language.setText(lan.getLanguageName());
+			exit.setText(lan.getExitName());
 		}
 	}
 

@@ -36,13 +36,19 @@ public class PauseScreen extends JDialog implements IPause, MouseListener, Obser
 		this.controller = controller;
 		observableLanguage.addObserver(this);
 
-		this.getContentPane().setBackground(new Color(189, 215, 255));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		displayTitle();
+		displayButtons();
+		setFrame();
+	}
 
+	private void displayTitle() {
 		add(title = new JLabel());
 		title.setPreferredSize(new Dimension(180, 50));
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+	}
+
+	private void displayButtons() {
 		add(resume = setUpBtn());
 		add(restart = setUpBtn());
 		add(setting = setUpBtn());
@@ -57,7 +63,11 @@ public class PauseScreen extends JDialog implements IPause, MouseListener, Obser
 				resume();
 			}
 		});
+	}
 
+	private void setFrame() {
+		this.getContentPane().setBackground(new Color(189, 215, 255));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		setSize(280, 500);
 		setTitle("PAUSE");
 		setResizable(false);
@@ -116,7 +126,7 @@ public class PauseScreen extends JDialog implements IPause, MouseListener, Obser
 	@Override
 	public void backToHome() {
 		if (controller.backToHome())
-			dispose();
+		dispose();
 	}
 
 	@Override
@@ -201,21 +211,23 @@ public class PauseScreen extends JDialog implements IPause, MouseListener, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
+		updateLanguage(o);
+	}
+
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			this.setTitle(lan.getPauseName());
 			title.setText(lan.getPauseName());
-			if (resume != null && highScore != null && restart != null && tutorial != null && setting != null
-					&& language != null && home != null && exit != null) {
-				resume.setText(lan.getResumeName());
-				highScore.setText(lan.getHighScoreName());
-				restart.setText(lan.getRestartName());
-				tutorial.setText(lan.getTutorialName());
-				setting.setText(lan.getSettingName());
-				language.setText(lan.getLanguageName());
-				home.setText(lan.getHomeName());
-				exit.setText(lan.getExitName());
-			}
+			resume.setText(lan.getResumeName());
+			highScore.setText(lan.getHighScoreName());
+			restart.setText(lan.getRestartName());
+			tutorial.setText(lan.getTutorialName());
+			setting.setText(lan.getSettingName());
+			language.setText(lan.getLanguageName());
+			home.setText(lan.getHomeName());
+			exit.setText(lan.getExitName());
 		}
 	}
+
 }

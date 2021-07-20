@@ -35,16 +35,6 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 
 	public LanguageScreen(IController controller) {
 		this.controller = controller;
-		this.getContentPane().setBackground(new Color(189, 215, 255));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-		add(title = new JLabel());
-		title.setPreferredSize(new Dimension(180, 50));
-		title.setHorizontalAlignment(JLabel.CENTER);
-		title.setFont(new Font(Font.DIALOG, Font.BOLD, 25));
-		add(english = setUpBtn("ENGLISH"));
-		add(vietnamese = setUpBtn("VIETNAMESE"));
-		add(chinese = setUpBtn("CHINESE"));
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -52,7 +42,33 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 			}
 		});
 
-		// cancle button
+		setFrame();
+		displayTitle();
+		displayCancleButton();
+
+	}
+
+	public void setFrame() {
+		this.getContentPane().setBackground(new Color(189, 215, 255));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		setSize(280, 350);
+		setTitle("Language");
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	}
+
+	public void displayTitle() {
+		add(title = new JLabel());
+		title.setPreferredSize(new Dimension(180, 50));
+		title.setHorizontalAlignment(JLabel.CENTER);
+		title.setFont(new Font(Font.DIALOG, Font.BOLD, 25));
+		add(english = setUpBtn("ENGLISH"));
+		add(vietnamese = setUpBtn("VIETNAMESE"));
+		add(chinese = setUpBtn("CHINESE"));
+	}
+
+	public void displayCancleButton() {
 		add(btnPn = new JPanel());
 		btnPn.setBackground(new Color(189, 215, 255));
 		btnPn.setPreferredSize(new Dimension(115, 50));
@@ -61,6 +77,11 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 		cancleBt.setPreferredSize(new Dimension(100, 30));
 		cancleBt.setBackground(new Color(240, 205, 139));
 		cancleBt.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		doActionCancleButton();
+	}
+
+	public void doActionCancleButton() {
 		cancleBt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -80,13 +101,6 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 				cancleBt.setBackground(new Color(240, 205, 139));
 			}
 		});
-		
-		
-		setSize(280, 350);
-		setTitle("Language");
-		setResizable(false);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
 	private JButton setUpBtn(String value) {
@@ -130,7 +144,7 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 			vietnamese.setBackground(new Color(240, 177, 60));
 		if (chinese == e.getSource())
 			chinese.setBackground(new Color(240, 177, 60));
-		
+
 	}
 
 	@Override
@@ -141,17 +155,15 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 			vietnamese.setBackground(new Color(240, 205, 139));
 		if (chinese == e.getSource())
 			chinese.setBackground(new Color(240, 205, 139));
-		
+
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
 	}
 
 	@Override
@@ -162,7 +174,7 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 		vietnamese.setText("VIETNAMESE");
 		chinese.setText("CHINESE");
 		cancleBt.setText("CANCLE");
-		
+
 		controller.tranlateEnglish();
 	}
 
@@ -176,7 +188,6 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 		cancleBt.setText("HỦY");
 
 		controller.tranlateVietnamese();
-		
 	}
 
 	@Override
@@ -191,6 +202,4 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 		controller.tranlateChinese();
 	}
 
-
-	
 }

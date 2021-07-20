@@ -28,19 +28,31 @@ public class Tutorial extends JDialog implements Observer {
 	public Tutorial(Observable observableLanguage) {
 		observableLanguage.addObserver(this);
 
-		this.getContentPane().setBackground(new Color(227, 238, 255));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		displayTitle();
+		content.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+		displayCancleButton();
+		setFrame();
+
+	}
+
+	private void displayTitle() {
 		add(title = new JLabel());
 		title.setPreferredSize(new Dimension(400, 100));
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font(Font.DIALOG, Font.BOLD, 28));
 		add(content = new JLabel());
+	}
 
-		content.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+	private void displayCancleButton() {
 		add(cancleBt = new JButton());
 		cancleBt.setPreferredSize(new Dimension(75, 30));
 		cancleBt.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		cancleBt.setBackground(new Color(240, 205, 139));
+
+		doActionCancleButton();
+	}
+
+	private void doActionCancleButton() {
 		cancleBt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -60,7 +72,11 @@ public class Tutorial extends JDialog implements Observer {
 				cancleBt.setBackground(new Color(240, 205, 139));
 			}
 		});
+	}
 
+	public void setFrame() {
+		this.getContentPane().setBackground(new Color(227, 238, 255));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		setSize(400, 520);
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -68,14 +84,17 @@ public class Tutorial extends JDialog implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
+		updateLanguage(o);
+	}
+
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			this.setTitle(lan.getTutorialName());
 			title.setText(lan.getTutorialName());
 			content.setIcon(new ImageIcon(lan.getTutorialImageName()));
-			if (cancleBt != null)
-				cancleBt.setText(lan.getCancleName());
-		}
-
+			cancleBt.setText(lan.getCancleName());		}
 	}
+
+	
 }

@@ -3,9 +3,8 @@ package translation;
 import java.util.Observable;
 
 public class Language extends Observable {
-	private static ITranslation lan = new English(); // default language
+	private static ITranslation lan = new TranslateEnglish(); // init default language
 
-	// singleton
 	private Language() {
 	}
 
@@ -17,16 +16,19 @@ public class Language extends Observable {
 		return instance;
 	}
 
-	// strategy
 	public void setLanguage(ITranslation lan) {
 		this.lan = lan;
-		updateLanguage();
+		changeLanguage();
 	}
-	
+
 	// update observer
-	public void updateLanguage() {
-		super.setChanged();
-		super.notifyObservers();
+	public void changeLanguage() {
+		try {
+			super.setChanged();
+			super.notifyObservers();
+		} catch (NullPointerException e) { // đôi lúc button bị null do chưa load kịp
+			changeLanguage();
+		}
 	}
 
 	public String getYourName() {

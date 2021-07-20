@@ -45,6 +45,53 @@ public abstract class AShape {
 	public void update() {
 		time += System.currentTimeMillis() - lastTime;
 		lastTime = System.currentTimeMillis();
+
+		blocksCollisionTogether();
+		moveX();
+		moveY();
+ 
+		this.detalX = 0;
+		moveX = true;
+	}
+
+	public void moveX() {
+		// check move x
+		if (!(x + detalX + coords[0].length > IGame.WIDTH) && !(x + detalX < 0)) {
+			for (int row = 0; row < coords.length; row++) {
+				for (int col = 0; col < coords[row].length; col++) {
+					if (coords[row][col] != 0) {
+						if (this.game.getBoard()[y + row][x + detalX + col] != 0)
+							this.moveX = false;
+					}
+				}
+			}
+			// move x
+			if (moveX)
+				x += this.detalX;
+		}
+	}
+
+	public void moveY() {
+		// check move y
+		if (!(y + 1 + coords.length > IGame.HEIGHT)) {
+			for (int row = 0; row < coords.length; row++) {
+				for (int col = 0; col < coords[row].length; col++) {
+					if (coords[row][col] != 0) {
+						if (this.game.getBoard()[y + row + 1][col + x] != 0)
+							collision = true;
+					}
+				}
+			}
+			// move y
+			if (time > currentSpeed) {
+				y++;
+				time = 0;
+			}
+		} else
+			collision = true;
+	}
+
+	public void blocksCollisionTogether() {
 		if (collision) {
 			for (int row = 0; row < coords.length; row++) {
 				for (int col = 0; col < coords[row].length; col++) {
@@ -57,44 +104,8 @@ public abstract class AShape {
 			game.checkLine();
 			game.addScore();
 		}
-		if (!(x + detalX + coords[0].length > IGame.WIDTH) && !(x + detalX < 0)) {
-			for (int row = 0; row < coords.length; row++) {
-				for (int col = 0; col < coords[row].length; col++) {
-					if (coords[row][col] != 0) {
-						if (this.game.getBoard()[y + row][x + detalX + col] != 0) {
-							this.moveX = false;
-						}
-					}
-				}
-			}
-			if (moveX) {
-				x += this.detalX;
-			}
-		}
-		// full y
-		if (!(y + 1 + coords.length > IGame.HEIGHT)) {
-			for (int row = 0; row < coords.length; row++) {
-				for (int col = 0; col < coords[row].length; col++) {
-					if (coords[row][col] != 0) {
-						if (this.game.getBoard()[y + row + 1][col + x] != 0) {
-							collision = true;
-						}
-					}
-				}
-			}
-			if (time > currentSpeed) {
-				y++;
-				time = 0;
-			}
-		} else {
-			collision = true;
-		}
-		
-		this.detalX = 0;
-		moveX = true;
 	}
 
-	// xoay
 	public void rotate() {
 		// insert code
 		if (this.collision) {
@@ -137,7 +148,7 @@ public abstract class AShape {
 		this.currentSpeed = normalSpeed;
 	}
 
-	// reverse
+	// reverse matrix
 	public int[][] reverse(int[][] input) {
 		int mid = input.length / 2;
 		for (int i = 0; i < mid; i++) {
@@ -148,7 +159,7 @@ public abstract class AShape {
 		return input;
 	}
 
-	// transpose
+	// transpose matrix
 	public int[][] transpose(int[][] input) {
 		int[][] output = new int[input[0].length][input.length];
 		for (int i = 0; i < input.length; i++) {

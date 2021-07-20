@@ -36,22 +36,32 @@ public class ButtonPanel extends JPanel implements MouseListener, Observer {
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
 		this.view = view;
+
+		setFrame();
+		displayTitle();
+		displayButton();
+	}
+
+	private void setFrame() {
 		setPreferredSize(new Dimension(240, 500));
 		setBackground(new Color(252, 252, 252));
 		setBorder(BorderFactory.createBevelBorder(1));
+		setFocusable(true);
+		requestFocus();
+	}
 
-		// add component
+	private void displayTitle() {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
 		add(title = new JLabel(new ImageIcon("resource/img/200_150.png")));
 		title.setPreferredSize(new Dimension(200, 150));
 		title.setHorizontalAlignment(JLabel.CENTER);
+	}
+
+	private void displayButton() {
 		add(newGame = setUpBtn("NEW GAME", null, 125, 40));
 		add(pause = setUpBtn("PAUSE", null, 125, 40));
 		add(home = setUpBtn("HOME", null, 125, 40));
 		add(exit = setUpBtn("EXIT", null, 125, 40));
-
-		setFocusable(true);
-		requestFocus();
 	}
 
 	private JButton setUpBtn(String value, ImageIcon icon, int w, int h) {
@@ -111,15 +121,17 @@ public class ButtonPanel extends JPanel implements MouseListener, Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (o instanceof Language) {
-			Language tran = (Language) o;
-			if (newGame != null && pause != null && home != null && exit != null) {
-				newGame.setText(tran.getNewGameName());
-				pause.setText(tran.getPauseName());
-				home.setText(tran.getHomeName());
-				exit.setText(tran.getExitName());
-			}
-		}
+		updateLanguage(o);
 	}
+
+	private void updateLanguage(Observable o) {
+		if (o instanceof Language) {
+			Language lan = (Language) o;
+			newGame.setText(lan.getNewGameName());
+			pause.setText(lan.getPauseName());
+			home.setText(lan.getHomeName());
+			exit.setText(lan.getExitName());		}
+	}
+	
 
 }

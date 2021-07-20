@@ -25,16 +25,16 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import translation. Language;
+import translation.Language;
 import controller.IController;
 import model.Game;
 
 public class Setting extends JDialog implements ISetting, Observer {
 
 	private IController controller;
-	private JLabel title, bgMsLb, effectLb, bgMsValueLb, effectValueLb;
-	private JSlider bgMsSld, effectSld;
-	private JPanel titlePn, bgMsPn, effectSldPn, btnPn;
+	private JLabel title, soundtrackLb, effectLb, soundtrackValueLb, effectValueLb;
+	private JSlider soundtrackSlider, effectSlider;
+	private JPanel titlePn, soundtrackPn, effectSliderPn, btnPn;
 	private JButton cancleBt;
 
 	public Setting(IController controller, Observable observableModel, Observable observableLanguage) {
@@ -42,63 +42,114 @@ public class Setting extends JDialog implements ISetting, Observer {
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
 
+		setFrame();
+		displayTitle();
+		displaySoundtrack();
+		displayEffectMusic();
+		displayCancleButton();
+	}
+
+	private void setFrame() {
 		this.getContentPane().setBackground(new Color(189, 215, 255));
 		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		setSize(350, 350);
+		setResizable(false);
+		setIconImage(new ImageIcon("resource/img/104.png").getImage());
+		setLocationRelativeTo(null);
+	}
+
+	private void displayTitle() {
 		add(title = new JLabel());
 		title.setPreferredSize(new Dimension(200, 100));
 		title.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
 		title.setHorizontalAlignment(JLabel.CENTER);
+	}
 
-		add(bgMsPn = new JPanel());
-		bgMsPn.setBackground(new Color(189, 215, 255));
-		bgMsPn.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
-		bgMsPn.add(bgMsLb = new JLabel());
-		bgMsLb.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		bgMsLb.addMouseListener(new MouseAdapter() {
+	private void displaySoundtrack() {
+		add(soundtrackPn = new JPanel());
+		makeSoundtrackLb();
+		makeSoundtrackSlider();
+		adjustSoundtrackLb();
+		adjustSoundtrackSlider();
+	}
+
+	private void makeSoundtrackLb() {
+		soundtrackPn.setBackground(new Color(189, 215, 255));
+		soundtrackPn.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
+		soundtrackPn.add(soundtrackLb = new JLabel());
+		soundtrackLb.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	}
+
+	private void makeSoundtrackSlider() {
+		soundtrackPn.add(soundtrackSlider = new JSlider(0, 100));
+		soundtrackSlider.setBackground(Color.WHITE);
+		soundtrackSlider.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		soundtrackPn.add(soundtrackValueLb = new JLabel(soundtrackSlider.getValue() + ""));
+	}
+
+	private void adjustSoundtrackLb() {
+		soundtrackLb.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				setStateBgMs();
+				setStateSoundTrack();
 			}
 		});
-		bgMsPn.add(bgMsSld = new JSlider(0, 100));
-		bgMsSld.setBackground(Color.WHITE);
-		bgMsSld.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		bgMsPn.add(bgMsValueLb = new JLabel(bgMsSld.getValue() + ""));
-		bgMsSld.addChangeListener(new ChangeListener() {
+	}
 
+	private void adjustSoundtrackSlider() {
+		soundtrackSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				bgMsValueLb.setText(bgMsSld.getValue() + "");
-				changeVolumeBgMs(bgMsSld.getValue());
+				soundtrackValueLb.setText(soundtrackSlider.getValue() + "");
+				changeVolumeSoundTrack(soundtrackSlider.getValue());
 			}
 		});
+	}
 
-		add(effectSldPn = new JPanel());
-		effectSldPn.setBackground(new Color(189, 215, 255));
-		effectSldPn.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
-		effectSldPn.add(effectLb = new JLabel());
+	private void displayEffectMusic() {
+		add(effectSliderPn = new JPanel());
+		makeEffectMusicLb();
+		makeEffectMusicSlider();
+		adjustEffectMusicLb();
+		adjustEffectMusicSlider();
+	}
+
+	private void makeEffectMusicLb() {
+		effectSliderPn.setBackground(new Color(189, 215, 255));
+		effectSliderPn.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
+		effectSliderPn.add(effectLb = new JLabel());
 		effectLb.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	}
+
+	private void makeEffectMusicSlider() {
+		effectSliderPn.add(effectSlider = new JSlider(0, 100));
+		effectSlider.setBackground(Color.WHITE);
+		effectSlider.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		effectSliderPn.add(effectValueLb = new JLabel(effectSlider.getValue() + ""));
+	}
+
+	private void adjustEffectMusicLb() {
 		effectLb.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				setStateEffect();
+				setStateEffectMusic();
 			}
 		});
-		effectSldPn.add(effectSld = new JSlider(0, 100));
-		effectSld.setBackground(Color.WHITE);
-		effectSld.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		effectSldPn.add(effectValueLb = new JLabel(effectSld.getValue() + ""));
-		effectSld.addChangeListener(new ChangeListener() {
+	}
 
+	private void adjustEffectMusicSlider() {
+		effectSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				effectValueLb.setText(effectSld.getValue() + "");
-				changeVolumeEffect(effectSld.getValue());
+				effectValueLb.setText(effectSlider.getValue() + "");
+				changeVolumeEffectMusic(effectSlider.getValue());
 			}
 		});
+	}
 
+	private void displayCancleButton() {
 		add(btnPn = new JPanel());
 		btnPn.setBackground(new Color(189, 215, 255));
 		btnPn.setPreferredSize(new Dimension(200, 50));
@@ -107,6 +158,11 @@ public class Setting extends JDialog implements ISetting, Observer {
 		cancleBt.setPreferredSize(new Dimension(100, 30));
 		cancleBt.setBackground(new Color(240, 205, 139));
 		cancleBt.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		doActionCancleButton();
+	}
+
+	private void doActionCancleButton() {
 		cancleBt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -126,59 +182,72 @@ public class Setting extends JDialog implements ISetting, Observer {
 				cancleBt.setBackground(new Color(240, 205, 139));
 			}
 		});
-
-		setSize(350, 350);
-		setResizable(false);
-		setIconImage(new ImageIcon("resource/img/104.png").getImage());
-		setLocationRelativeTo(null);
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		if (o instanceof Game) {
-			Game game = (Game) o;
-			if (game.isRunningBgMs())
-				bgMsLb.setIcon(new ImageIcon("resource/img/102.png"));
-			else
-				bgMsLb.setIcon(new ImageIcon("resource/img/103.png"));
-
-			if (game.isRunningEffect())
-				effectLb.setIcon(new ImageIcon("resource/img/101.png"));
-			else
-				effectLb.setIcon(new ImageIcon("resource/img/100.png"));
-
-			if (bgMsSld != null)
-				bgMsSld.setValue(game.getValueMs());
-			if (effectSld != null)
-				effectSld.setValue(game.getValueEffect());
-		}
-
-		if (o instanceof Language) {
-			 Language lan = ( Language) o;
-			this.setTitle(lan.getSettingName());
-			title.setText(lan.getSettingName());
-			if (cancleBt != null)
-				cancleBt.setText(lan.getCancleName());
-		}
+	public void changeVolumeSoundTrack(int value) {
+		controller.changeVolumeSoundtrack(value);
 	}
 
 	@Override
-	public void changeVolumeBgMs(int value) {
-		controller.changeVolumeBgMs(value);
-	}
-
-	@Override
-	public void changeVolumeEffect(int value) {
+	public void changeVolumeEffectMusic(int value) {
 		controller.changeVolumeEffect(value);
 	}
 
 	@Override
-	public void setStateBgMs() {
-		controller.setStateBgMs();
+	public void setStateSoundTrack() {
+		controller.setStateSoundtrack();
 	}
 
 	@Override
-	public void setStateEffect() {
-		controller.setStateEffect();
+	public void setStateEffectMusic() {
+		controller.setStateEffectMusic();
 	}
+
+	@Override
+	public void update(Observable observable, Object arg) {
+		updateMusic(observable);
+		updateLanguage(observable);
+	}
+
+	private void updateMusic(Observable o) {
+		if (o instanceof Game) {
+			Game game = (Game) o;
+			updateIconSoundtrack(game);
+			updateIconEffectMs(game);
+			updateSliderBar(game);
+		}
+	}
+
+	
+	private void updateIconSoundtrack(Game game) {
+		if (!game.isRunningSoundtrack())
+			soundtrackLb.setIcon(new ImageIcon("resource/img/102.png"));
+		else
+			soundtrackLb.setIcon(new ImageIcon("resource/img/103.png"));
+	}
+
+	private void updateIconEffectMs(Game game) {
+		if (!game.isRunningEffect())
+			effectLb.setIcon(new ImageIcon("resource/img/101.png"));
+		else
+			effectLb.setIcon(new ImageIcon("resource/img/100.png"));
+	}
+
+	private void updateSliderBar(Game game) {
+		if (soundtrackSlider != null)
+			soundtrackSlider.setValue(game.getValueSoundtrack());
+		if (effectSlider != null)
+			effectSlider.setValue(game.getValueEffect());
+	}
+
+	private void updateLanguage(Observable o) {
+		if (o instanceof Language) {
+			Language lan = (Language) o;
+			this.setTitle(lan.getSettingName());
+			title.setText(lan.getSettingName());
+			cancleBt.setText(lan.getCancleName());
+		}
+	}
+
 }

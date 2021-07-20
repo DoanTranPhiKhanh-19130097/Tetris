@@ -1,7 +1,6 @@
 package view.high_score;
 
 import java.awt.Color;
-
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -41,23 +40,43 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
 
+		displayTitle();
+		add(contentPn = new ContentPn());
+		displayCancleButton();
+		setFrame();
+
+	}
+
+	private void setFrame() {
 		setLayout(new FlowLayout());
 		this.getContentPane().setBackground(new Color(189, 215, 255));
+		setSize(500, 705);
+		setTitle(titleFrame);
+		setResizable(false);
+		setLocationRelativeTo(null);
+	}
 
-		// component
+	private void displayTitle() {
 		add(titlePn = new JPanel());
 		titlePn.setBackground(new Color(189, 215, 255));
 		titlePn.add(title = new JLabel(highScore));
 		title.setPreferredSize(new Dimension(500, 100));
 		title.setFont(new Font(Font.DIALOG, Font.BOLD, 25));
 		title.setHorizontalAlignment(JLabel.CENTER);
-		add(contentPn = new ContentPn());
+	}
+
+	private void displayCancleButton() {
 		add(btPn = new JPanel());
 		btPn.setBackground(new Color(189, 215, 255));
 		btPn.add(cancleBt = new JButton());
 		cancleBt.setBackground(new Color(240, 205, 139));
 		cancleBt.setPreferredSize(new Dimension(100, 30));
 		cancleBt.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		doActionCancleButton();
+	}
+
+	private void doActionCancleButton() {
 		cancleBt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -77,15 +96,15 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 				cancleBt.setBackground(new Color(240, 205, 139));
 			}
 		});
-
-		setSize(500, 705);
-		setTitle(titleFrame);
-		setResizable(false);
-		setLocationRelativeTo(null);
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
+		updateListPlayers(o);
+		updateLanguage(o);
+	}
+
+	private void updateListPlayers(Observable o) {
 		if (o instanceof Game) {
 			Game game = (Game) o;
 			players = game.getPlayerList();
@@ -93,7 +112,14 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 				sort();
 			repaint();
 		}
+	}
 
+	@Override
+	public void sort() {
+		players.sort();
+	}
+
+	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			rank = lan.getRankName();
@@ -102,14 +128,14 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 			score = lan.getScoreName();
 			title.setText(lan.getHighScoreName());
 			titleFrame = lan.getHighScoreName();
-			if (cancleBt != null)
-				cancleBt.setText(lan.getCancleName());
+			cancleBt.setText(lan.getCancleName());
 		}
 	}
 
-	@Override
-	public void sort() {
-		players.sort();
+	private boolean isNullButton() {
+		if (cancleBt != null)
+			return false;
+		return true;
 	}
 
 	private class ContentPn extends JPanel {
@@ -129,7 +155,6 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 			g.setFont(new Font(Font.DIALOG, Font.HANGING_BASELINE, 20));
 
 			ArrayList<Player> playerList = players.getPlayers();
-
 			for (int i = 0; i < playerList.size(); i++) {
 				if (i >= 10)
 					break;

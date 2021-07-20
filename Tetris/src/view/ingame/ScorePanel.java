@@ -26,27 +26,46 @@ public class ScorePanel extends JPanel implements Observer {
 	private JLabel nameLb, scoreLb;
 	private String playerName, scoreName;
 
-
 	public ScorePanel(IInGame view, Observable observableModel, Observable observableLanguage) {
-		
+
 		this.view = view;
 		observableModel.addObserver(this);
 		observableLanguage.addObserver(this);
+
+		displayNameLb();
+		displayScoreLb();
+		setFrame();
+	}
+
+	private void displayNameLb() {
+		add(nameLb = new JLabel("PLAYER"));
+		nameLb.setHorizontalAlignment(JLabel.CENTER);
+		nameLb.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
+
+	}
+
+	private void displayScoreLb() {
+		add(scoreLb = new JLabel("SCORE"));
+		scoreLb.setHorizontalAlignment(JLabel.CENTER);
+		scoreLb.setFont(new Font(Font.DIALOG, Font.ITALIC, 20));
+
+	}
+
+	private void setFrame() {
 		setPreferredSize(new Dimension(240, 120));
 		setBackground(new Color(252, 252, 252));
 		setLayout(new GridLayout(2, 1));
 		setBorder(BorderFactory.createBevelBorder(1));
 
-		add(nameLb = new JLabel("PLAYER"));
-		nameLb.setHorizontalAlignment(JLabel.CENTER);
-		nameLb.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
-
-		add(scoreLb = new JLabel("SCORE"));
-		scoreLb.setHorizontalAlignment(JLabel.CENTER);
-		scoreLb.setFont(new Font(Font.DIALOG, Font.ITALIC, 20));
 	}
 
 	public void update(Observable o, Object arg) {
+		updateNameAndScore(o);
+		updateLanguage(o);
+
+	}
+
+	public void updateNameAndScore(Observable o) {
 		if (o instanceof Game) {
 			Game game = (Game) o;
 			player = game.getPlayer();
@@ -55,7 +74,9 @@ public class ScorePanel extends JPanel implements Observer {
 			if (scoreLb != null)
 				scoreLb.setText(scoreName + ": " + player.getScore());
 		}
-		
+	}
+
+	public void updateLanguage(Observable o) {
 		if (o instanceof Language) {
 			Language lan = (Language) o;
 			playerName = lan.getPlayerName();

@@ -36,10 +36,13 @@ public class InGameScreen extends JFrame implements IInGame, KeyListener {
 			scorePn = new ScorePanel(this, observableModel, observableLanguage);
 			optionPn = new ButtonPanel(this, observableModel, observableLanguage);
 		}
-
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		getContentPane().setBackground(new Color(161, 114, 224));
+		
 		add(boardGamePn);
+		displayRightPn();
+		setFrame();
+	}
+
+	public void displayRightPn() {
 		add(rightPn = new JPanel());
 		rightPn.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		rightPn.setBackground(new Color(161, 114, 224));
@@ -47,10 +50,13 @@ public class InGameScreen extends JFrame implements IInGame, KeyListener {
 		rightPn.add(nextShapePn);
 		rightPn.add(scorePn);
 		rightPn.add(optionPn);
-
+	}
+	
+	public void setFrame() {
 		setFocusable(true);
 		addKeyListener(this);
-
+		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		getContentPane().setBackground(new Color(161, 114, 224));
 		pack();
 		setTitle("TETRIS");
 		setIconImage(new ImageIcon("resource/img/iconGame.png").getImage());
@@ -58,7 +64,6 @@ public class InGameScreen extends JFrame implements IInGame, KeyListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
 	@Override
 	public void requestFocus() {
 		super.requestFocus();
@@ -114,12 +119,11 @@ public class InGameScreen extends JFrame implements IInGame, KeyListener {
 		if (controller.backToHome())
 			dispose();
 	}
-
-	@Override
-	public void disposeIngame() {
-		this.dispose();
-	}
 	
+	@Override
+	public void disposeInGame() {
+		dispose();
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -147,4 +151,5 @@ public class InGameScreen extends JFrame implements IInGame, KeyListener {
 		if (key == KeyEvent.VK_DOWN)
 			setNormalSpeed();
 	}
+	
 }

@@ -1,7 +1,7 @@
 package translation;
 
-public interface ITranslation {
-	// view home
+public interface ITranslation{
+	// home screen
 	public String performYourName();
 	public String performStartName();
 	public String performSettingName();
@@ -11,19 +11,19 @@ public interface ITranslation {
 	public String performExitName();
 	public String performCancleName();
 
-	// high score
+	// high score screen
 	public String performRankName();
 	public String performPlayerName();
 	public String performScoreName();
 
-	// tutorial
+	// tutorial screen
 	public String performTutorialImageName();
 	public String performRotateName();
 	public String performRightName();
 	public String performSpeedName();
 	public String performLeftName();
 
-	// in game
+	// in game screen
 	public String performGameOver();
 	public String performReadyName();
 	public String performStartIconName();
@@ -35,7 +35,7 @@ public interface ITranslation {
 	public String performRestartName();
 	public String performResumeName();
 
-	// question
+	// question screen
 	public String performTitleQuestion();
 	public String performQuestion();
 	public String performYesName();

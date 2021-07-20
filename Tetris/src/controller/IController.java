@@ -18,9 +18,9 @@ public interface IController {
 	public boolean backToHome();//dong cua so in game, mo cua so home
 	public void exit();//thoat game
 	public void startGameAtHome();//bat dau game tai cua so home
-	public void setStateBgMs();// bat tat nhac nen
-	public void setStateEffect();// bat tat effect
-	public void changeVolumeBgMs(int value);// thay doi am luong nhac nen
+	public void setStateSoundtrack();// bat tat nhac nen
+	public void setStateEffectMusic();// bat tat effect
+	public void changeVolumeSoundtrack(int value);// thay doi am luong nhac nen
 	public void changeVolumeEffect(int value);// thay doi am luong effect
 	public void tranlateEnglish();
 	public void tranlateVietnamese();

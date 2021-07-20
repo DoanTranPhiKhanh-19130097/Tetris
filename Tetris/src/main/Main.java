@@ -31,7 +31,7 @@ public class Main implements Runnable {
 		while (true) {
 			startTime = System.nanoTime();
 
-			game.update();
+			game.updateInGame();
 			
 			delay = tagetTime - (int) ((System.nanoTime() - startTime) / 1000000);
 			if (delay < 0)

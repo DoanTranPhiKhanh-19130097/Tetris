@@ -9,7 +9,7 @@ public interface IInGame {
 	public void right();
 	public void down();
 	public void backToHome();
-	public void disposeIngame();
+	public void disposeInGame();
 	public void setNormalSpeed();
 	public void rotate();
 	public void exit();

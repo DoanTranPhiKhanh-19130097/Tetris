@@ -27,7 +27,7 @@ public class Controller implements IController {
 	private IHome home;
 	private IHighScore highScore;
 	private ISetting setting;
-	private ILanguage languageScreen;
+	private ILanguage translation;
 	private Tutorial tutorial;
 	private Language lan = Language.getInstance(); // set up language
 
@@ -38,8 +38,8 @@ public class Controller implements IController {
 		highScore = new HighScore(this, (Observable) model, (Observable) lan);
 		setting = new Setting(this, (Observable) model, (Observable) lan);
 		tutorial = new Tutorial((Observable) lan);
-		languageScreen = new LanguageScreen(this);
-		lan.updateLanguage(); // update để lấy default language cho observer
+		translation = new LanguageScreen(this);
+		lan.changeLanguage(); // lấy default language cho observer
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class Controller implements IController {
 	@Override
 	public void showLanguage() {
 		model.pause();
-		languageScreen.show();
+		translation.show();
 
 	}
 
@@ -128,10 +128,9 @@ public class Controller implements IController {
 
 		if (op == JOptionPane.YES_OPTION) {
 			model.setInGame(false);
-			inGame.disposeIngame();
+			inGame.disposeInGame();
 			home = new HomeScreen(this, (Observable) lan);
-			lan.updateLanguage(); // user chỉ chọn language trong ingame nên lan gọi lại update cho home
-			
+			lan.changeLanguage(); // user chỉ chọn language trong ingame nên lan gọi lại update cho home
 			return true;
 		} else {
 			if (!pause.isShow()) {
@@ -140,6 +139,7 @@ public class Controller implements IController {
 			}
 			return false;
 		}
+
 	}
 
 	@Override
@@ -163,25 +163,24 @@ public class Controller implements IController {
 		home.dispose();
 		model.setPlayer(home.getNamePlayer());
 		model.start();
-		
+
 		inGame = new InGameScreen(this, (Observable) model, (Observable) lan);
-		lan.updateLanguage();// user chỉ chọn language trong home nên lan gọi lại update cho ingame
-
+		lan.changeLanguage();// user chỉ chọn language trong home nên lan gọi lại update cho ingame
 	}
 
 	@Override
-	public void setStateBgMs() {
-		model.setStateBgMs();
+	public void setStateSoundtrack() {
+		model.setStateSoundtrack();
 	}
 
 	@Override
-	public void setStateEffect() {
-		model.setStateEffect();
+	public void setStateEffectMusic() {
+		model.setStateEffectMusic();
 	}
 
 	@Override
-	public void changeVolumeBgMs(int value) {
-		model.changeVolumeBgMs(value);
+	public void changeVolumeSoundtrack(int value) {
+		model.changeVolumeSoundtrack(value);
 	}
 
 	@Override
@@ -197,19 +196,19 @@ public class Controller implements IController {
 	@Override
 	public void tranlateEnglish() {
 		model.tranlateEnglish();
-		languageScreen.dispose();
+		translation.dispose();
 	}
 
 	@Override
 	public void tranlateVietnamese() {
 		model.tranlateVietnamese();
-		languageScreen.dispose();
+		translation.dispose();
 	}
 
 	@Override
 	public void tranlateChinese() {
 		model.tranlateChinese();
-		languageScreen.dispose();
+		translation.dispose();
 	}
 
 }
