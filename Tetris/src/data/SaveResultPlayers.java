@@ -15,8 +15,10 @@ public class SaveResultPlayers {
 	public static void saveAchievements(Player player, String scoreFileName) {
 		try {
 			File scoreFile = new File(scoreFileName);
-			if (!scoreFile.exists())
-				writePlayerToScoreFile(scoreFile, player);
+			if (!scoreFile.exists()) {
+				scoreFile.createNewFile();
+			}
+			writePlayerToScoreFile(scoreFile, player);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -25,7 +27,6 @@ public class SaveResultPlayers {
 	}
 
 	public static void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
-		scoreFile.createNewFile();
 		fileWriter = new FileWriter(scoreFile.getAbsoluteFile(), true);
 		bufferedWriter = new BufferedWriter(fileWriter);
 		bufferedWriter.write(player.toString() + "\n");
