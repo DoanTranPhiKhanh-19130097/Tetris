@@ -26,7 +26,11 @@ public class SaveResultPlayers {
 		}
 	}
 
+<<<<<<< HEAD
 	public void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
+=======
+	public static void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
+>>>>>>> a1e6a4c013825e69e0d8583c2b2b319b80b970aa
 		fileWriter = new FileWriter(scoreFile.getAbsoluteFile(), true);
 		bufferedWriter = new BufferedWriter(fileWriter);
 		bufferedWriter.write(player.toString() + "\n");
