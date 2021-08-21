@@ -13,7 +13,8 @@ import translation.TranslateEnglish;
 import translation.Language;
 import translation.TranslateVietNamese;
 import audio.Audio;
-import data.DataManager;
+import data.ReadResultPlayers;
+import data.SaveResultPlayers;
 import factory.IShapeFactory;
 import factory.ShapeRandomFactory;
 import obj.AShape;
@@ -41,6 +42,10 @@ public class Game extends Observable implements IGame {
 
 	private Audio playSoundtrack;
 	private Audio playEffectMusic;
+	
+
+	private ReadResultPlayers read;
+	private SaveResultPlayers save;
 
 	public Game() {
 		playerList = new PlayerList();
@@ -51,14 +56,16 @@ public class Game extends Observable implements IGame {
 
 		startTime = System.nanoTime();
 		storeShapes = new ArrayList<AShape>();
-		playerList = DataManager.loadPlayerListFromScoreFile("resource/highscore/high_score.txt", this);
+		
+		read = new ReadResultPlayers();
+		save = new SaveResultPlayers();
+		playerList = read.loadPlayerListFromScoreFile("resource/highscore/high_score.txt", this);
 		try {
 			playSoundtrack = new Audio("resource/sound/bg_music.wav", false, 80);
 			playEffectMusic = new Audio("resource/sound/effect_clear.wav", false, 80);
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -74,7 +81,7 @@ public class Game extends Observable implements IGame {
 				}
 			}
 		}
-
+		
 		playSoundtrack.playSound(pause, true);
 		updateToObserver();
 
@@ -111,9 +118,10 @@ public class Game extends Observable implements IGame {
 				if (coords[i][j] != 0 && board[currentShape.getY() + i + 1][currentShape.getX() + j] != 0) {
 					player.setPlaying(false);
 					playerList.add(player);
-					DataManager.saveAchievements(player, "resource/highscore/high_score.txt");
+					save.saveAchievements(player, "resource/highscore/high_score.txt");
 					gameOver = true;
 					break;
+					
 				}
 			}
 		}

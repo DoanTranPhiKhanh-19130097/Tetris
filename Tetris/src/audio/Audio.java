@@ -29,7 +29,6 @@ public class Audio {
 
 	public void playSound(boolean isPause, boolean isLoop) {
 		if (!mute && !isPause) {
-
 			start();
 			if (isLoop)
 				loop();

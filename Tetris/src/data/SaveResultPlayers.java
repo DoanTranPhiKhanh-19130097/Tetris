@@ -9,14 +9,16 @@ import obj.Player;
 
 public class SaveResultPlayers {
 
-	private static BufferedWriter bufferedWriter = null;
-	private static FileWriter fileWriter = null;
+	private BufferedWriter bufferedWriter = null;
+	private FileWriter fileWriter = null;
 
-	public static void saveAchievements(Player player, String scoreFileName) {
+	public void saveAchievements(Player player, String scoreFileName) {
 		try {
 			File scoreFile = new File(scoreFileName);
-			if (!scoreFile.exists())
-				writePlayerToScoreFile(scoreFile, player);
+			if (!scoreFile.exists()) {
+				scoreFile.createNewFile();
+			}
+			writePlayerToScoreFile(scoreFile, player);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -24,14 +26,13 @@ public class SaveResultPlayers {
 		}
 	}
 
-	public static void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
-		scoreFile.createNewFile();
+	public void writePlayerToScoreFile(File scoreFile, Player player) throws IOException {
 		fileWriter = new FileWriter(scoreFile.getAbsoluteFile(), true);
 		bufferedWriter = new BufferedWriter(fileWriter);
 		bufferedWriter.write(player.toString() + "\n");
 	}
 
-	public static void closeFileWriter() {
+	public void closeFileWriter() {
 		try {
 			if (bufferedWriter != null)
 				bufferedWriter.close();

@@ -17,7 +17,7 @@ public class ReadResultPlayers {
 	private static BufferedReader bufferedReader = null;
 	private static FileReader fileReader = null;
 
-	public static PlayerList loadPlayerListFromScoreFile(String scoreFileName, Observable observable) {
+	public PlayerList loadPlayerListFromScoreFile(String scoreFileName, Observable observable) {
 		try {
 			File scoreFile = new File(scoreFileName);
 			if (scoreFile.exists()) {
@@ -31,7 +31,7 @@ public class ReadResultPlayers {
 		return playerList;
 	}
 
-	public static void addPlayerToPlayerList(File fileScore, Observable observable) throws IOException {
+	public void addPlayerToPlayerList(File fileScore, Observable observable) throws IOException {
 		fileReader = new FileReader(fileScore);
 		bufferedReader = new BufferedReader(fileReader);
 		String line = bufferedReader.readLine();
@@ -44,7 +44,7 @@ public class ReadResultPlayers {
 		}
 	}
 
-	public static void closeFileReader() {
+	public void closeFileReader() {
 		try {
 			if (bufferedReader != null)
 				bufferedReader.close();

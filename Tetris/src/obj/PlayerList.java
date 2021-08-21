@@ -28,13 +28,16 @@ public class PlayerList {
 	}
 
 	public void sort() {
-		players.sort(new Comparator<Player>() {
-
-			@Override
-			public int compare(Player o1, Player o2) {
-				return o2.compareTo(o1);
-			}
-		});
+		
+		players.sort((p1, p2)-> p2.compareTo(p1));
+		
+//		players.sort(new Comparator<Player>() {
+//
+//			@Override
+//			public int compare(Player o1, Player o2) {
+//				return o2.compareTo(o1);
+//			}
+//		});
 	}
 	
 	public ArrayList<Player> getPlayers() {

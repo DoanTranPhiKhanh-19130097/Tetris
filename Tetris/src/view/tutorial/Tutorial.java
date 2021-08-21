@@ -1,5 +1,4 @@
 package view.tutorial;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
