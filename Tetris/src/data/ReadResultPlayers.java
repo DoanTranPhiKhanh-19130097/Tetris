@@ -10,48 +10,42 @@ import java.util.StringTokenizer;
 import obj.Player;
 import obj.PlayerList;
 
-public class ReadResultPlayers {
+public class ReadResultPlayers extends AFileResultPlayer {
 
 	private static PlayerList playerList = new PlayerList();
 
 	private static BufferedReader bufferedReader = null;
 	private static FileReader fileReader = null;
 
-	public PlayerList loadPlayerListFromScoreFile(String scoreFileName, Observable observable) {
-		try {
-			File scoreFile = new File(scoreFileName);
-			if (scoreFile.exists()) {
-				addPlayerToPlayerList(scoreFile, observable);
+	@Override
+	public void useThisFile(File scoreFile, Object object) throws IOException {
+		// read player from file
+		if (scoreFile.exists()) {
+			Observable observable = (Observable) object;
+			fileReader = new FileReader(scoreFile);
+			bufferedReader = new BufferedReader(fileReader);
+			String line = bufferedReader.readLine();
+			while (line != null) {
+				StringTokenizer tokenizer = new StringTokenizer(line, "\t");
+				String name = tokenizer.nextToken();
+				int score = Integer.parseInt(tokenizer.nextToken());
+				playerList.add(new Player(name, score, observable));
+				line = bufferedReader.readLine();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			closeFileReader();
 		}
+	}
+
+	@Override
+	public void closeThisFile() throws IOException {
+		if (bufferedReader != null)
+			bufferedReader.close();
+		if (fileReader != null)
+			fileReader.close();
+	}
+
+	@Override
+	public PlayerList getPlayerList() {
 		return playerList;
 	}
 
-	public void addPlayerToPlayerList(File fileScore, Observable observable) throws IOException {
-		fileReader = new FileReader(fileScore);
-		bufferedReader = new BufferedReader(fileReader);
-		String line = bufferedReader.readLine();
-		while (line != null) {
-			StringTokenizer tokenizer = new StringTokenizer(line, "\t");
-			String name = tokenizer.nextToken();
-			int score = Integer.parseInt(tokenizer.nextToken());
-			playerList.add(new Player(name, score, observable));
-			line = bufferedReader.readLine();
-		}
-	}
-
-	public void closeFileReader() {
-		try {
-			if (bufferedReader != null)
-				bufferedReader.close();
-			if (fileReader != null)
-				fileReader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

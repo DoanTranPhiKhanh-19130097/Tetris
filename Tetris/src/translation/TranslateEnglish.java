@@ -151,6 +151,21 @@ public class TranslateEnglish implements ITranslation{
 		return "resource/img/tutorial-ENG.png";
 	}
 
+	@Override
+	public String performEnglishNameBtn() {
+		return "ENGLISH";
+	}
+
+	@Override
+	public String performVietNameseNameBtn() {
+		return "VIETNAMESE";
+	}
+
+	@Override
+	public String performChineseNameBtn() {
+		return "CHINESE";
+	}
+
 	
 
 

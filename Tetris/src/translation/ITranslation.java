@@ -40,5 +40,11 @@ public interface ITranslation{
 	public String performQuestion();
 	public String performYesName();
 	public String performNoName();
+	
+	// language screen
+	public String performEnglishNameBtn();
+	public String performVietNameseNameBtn();
+	public String performChineseNameBtn();
+
 
 }

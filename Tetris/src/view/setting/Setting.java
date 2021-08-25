@@ -49,7 +49,7 @@ public class Setting extends JDialog implements ISetting, Observer {
 		displayCancleButton();
 	}
 
-	private void setFrame() {
+	public void setFrame() {
 		this.getContentPane().setBackground(new Color(189, 215, 255));
 		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		setSize(350, 350);

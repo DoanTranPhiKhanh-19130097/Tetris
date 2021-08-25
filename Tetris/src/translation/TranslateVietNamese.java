@@ -151,5 +151,20 @@ public class TranslateVietNamese implements ITranslation {
 		return "resource/img/tutorial-VIE.png";
 	}
 
+	@Override
+	public String performEnglishNameBtn() {
+		return "TIẾNG VIỆT";
+	}
+
+	@Override
+	public String performVietNameseNameBtn() {
+		return "TIẾNG ANH";
+	}
+
+	@Override
+	public String performChineseNameBtn() {
+		return "TIẾNG TRUNG";
+	}
+
 	
 }

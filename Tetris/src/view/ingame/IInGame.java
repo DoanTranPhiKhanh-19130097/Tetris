@@ -1,6 +1,8 @@
 package view.ingame;
 
-public interface IInGame {
+import view.high_score.IView;
+
+public interface IInGame extends IView{
 	public void pause();
 	public void resume();
 	public void startNewGame();

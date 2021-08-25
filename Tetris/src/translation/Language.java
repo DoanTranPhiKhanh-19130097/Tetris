@@ -3,7 +3,8 @@ package translation;
 import java.util.Observable;
 
 public class Language extends Observable {
-	private static ITranslation lan = new TranslateEnglish(); // init default language
+
+	// singleton pattern
 
 	private Language() {
 	}
@@ -16,12 +17,13 @@ public class Language extends Observable {
 		return instance;
 	}
 
+	private ITranslation lan = new TranslateEnglish(); // init default language
+
 	public void setLanguage(ITranslation lan) {
 		this.lan = lan;
 		changeLanguage();
 	}
 
-	// update observer
 	public void changeLanguage() {
 		try {
 			super.setChanged();
@@ -149,6 +151,18 @@ public class Language extends Observable {
 
 	public String getNoName() {
 		return lan.performNoName();
+	}
+
+	public String getEnglishNameBtn() {
+		return lan.performEnglishNameBtn();
+	}
+
+	public String getVietNameseNameBtn() {
+		return  lan.performVietNameseNameBtn();
+	}
+
+	public String getChineseNameBtn() {
+		return lan.performChineseNameBtn();
 	}
 
 }

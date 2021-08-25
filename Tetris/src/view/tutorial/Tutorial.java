@@ -1,4 +1,5 @@
 package view.tutorial;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -17,9 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import translation.Language;
+import view.high_score.IView;
 import model.Game;
 
-public class Tutorial extends JDialog implements Observer {
+public class Tutorial extends JDialog implements ITutorial, Observer {
 
 	private JLabel title, content;
 	private JButton cancleBt;
@@ -31,10 +33,9 @@ public class Tutorial extends JDialog implements Observer {
 		content.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 		displayCancleButton();
 		setFrame();
-
 	}
 
-	private void displayTitle() {
+	public void displayTitle() {
 		add(title = new JLabel());
 		title.setPreferredSize(new Dimension(400, 100));
 		title.setHorizontalAlignment(JLabel.CENTER);
@@ -42,7 +43,7 @@ public class Tutorial extends JDialog implements Observer {
 		add(content = new JLabel());
 	}
 
-	private void displayCancleButton() {
+	public void displayCancleButton() {
 		add(cancleBt = new JButton());
 		cancleBt.setPreferredSize(new Dimension(75, 30));
 		cancleBt.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -51,7 +52,7 @@ public class Tutorial extends JDialog implements Observer {
 		doActionCancleButton();
 	}
 
-	private void doActionCancleButton() {
+	public void doActionCancleButton() {
 		cancleBt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -92,8 +93,8 @@ public class Tutorial extends JDialog implements Observer {
 			this.setTitle(lan.getTutorialName());
 			title.setText(lan.getTutorialName());
 			content.setIcon(new ImageIcon(lan.getTutorialImageName()));
-			cancleBt.setText(lan.getCancleName());		}
+			cancleBt.setText(lan.getCancleName());
+		}
 	}
 
-	
 }

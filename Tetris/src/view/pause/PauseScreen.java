@@ -1,4 +1,4 @@
-package view.pause;
+	package view.pause;
 
 import java.awt.Color;
 import java.awt.Cursor;

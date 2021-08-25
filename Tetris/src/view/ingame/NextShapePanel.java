@@ -80,7 +80,7 @@ public class NextShapePanel extends JPanel implements Observer {
 			for (int i = 0; i < coords.length; i++) {
 				for (int j = 0; j < coords[i].length; j++) {
 					if (coords[i][j] != 0) {
-						g.setColor(colorFactory.creatColor(nextShape.getColorFlag()));
+						g.setColor(colorFactory.createColor(nextShape.getColorFlag()));
 						g.fillRect((getWidth() - coords[0].length * nextShape.getSize()) / 2 + j * tileSize,
 								(getHeight() - coords.length * nextShape.getSize()) / 2 + i * tileSize, tileSize,
 								tileSize);

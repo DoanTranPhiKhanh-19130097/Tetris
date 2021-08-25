@@ -153,6 +153,21 @@ public class TranslateChinese implements ITranslation{
 		return "resource/img/tutorial-CHI.png";
 	}
 
+	@Override
+	public String performEnglishNameBtn() {
+		return "中國人";
+	}
+
+	@Override
+	public String performVietNameseNameBtn() {
+		return  "英語";
+	}
+
+	@Override
+	public String performChineseNameBtn() {
+		return "越南人";
+	}
+
 	
 
 }

@@ -5,7 +5,7 @@ import java.awt.Color;
 public class ColorFactory implements IColorFactory {
 
 	@Override
-	public Color creatColor(int flagColor) {
+	public Color createColor(int flagColor) {
 		switch (flagColor) {
 		case 1:
 			return new Color(71, 246, 255);

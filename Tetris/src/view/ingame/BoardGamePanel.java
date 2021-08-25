@@ -77,6 +77,15 @@ public class BoardGamePanel extends JPanel implements Observer {
 		}
 	}
 
+	private void updateLanguage(Observable o) {
+		if (o instanceof Language) {
+			Language lan = (Language) o;
+			gameOverName = lan.getGameOverName();
+			readyName = lan.getReadyName();
+			startName = lan.getStartIconName();
+		}
+	}
+
 	private void changeSignalLbText(Game game) {
 		if (signalLb != null) {
 			if (game.isGameOver())
@@ -97,15 +106,6 @@ public class BoardGamePanel extends JPanel implements Observer {
 		repaint();
 	}
 
-	private void updateLanguage(Observable o) {
-		if (o instanceof Language) {
-			Language lan = (Language) o;
-			gameOverName = lan.getGameOverName();
-			readyName = lan.getReadyName();
-			startName = lan.getStartIconName();		}
-	}
-
-	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -123,7 +123,7 @@ public class BoardGamePanel extends JPanel implements Observer {
 			for (int i = 0; i < coords.length; i++) {
 				for (int j = 0; j < coords[0].length; j++) {
 					if (coords[i][j] != 0) {
-						g.setColor(colorFactory.creatColor(currentShape.getColorFlag()));
+						g.setColor(colorFactory.createColor(currentShape.getColorFlag()));
 						g.fillRect(currentShape.getSize() * (currentShape.getX() + j),
 								currentShape.getSize() * (currentShape.getY() + i), currentShape.getSize(),
 								currentShape.getSize());
@@ -151,7 +151,7 @@ public class BoardGamePanel extends JPanel implements Observer {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if (board[i][j] != 0) {
-					g.setColor(colorFactory.creatColor(board[i][j]));
+					g.setColor(colorFactory.createColor(board[i][j]));
 					g.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
 					g.setColor(Color.BLACK);
 					g.drawRect(j * tileSize, i * tileSize, tileSize, tileSize);

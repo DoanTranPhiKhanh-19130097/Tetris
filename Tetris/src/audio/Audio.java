@@ -17,14 +17,13 @@ public class Audio {
 	private boolean mute;
 	private int valueSound;
 
-	public Audio(String fileName, boolean mute, int valueSound)
-			throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	public Audio(String fileName) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		AudioInputStream audio = AudioSystem.getAudioInputStream(new File(fileName));
 		clip = AudioSystem.getClip();
 		clip.open(audio);
 
-		this.mute = mute;
-		this.valueSound = valueSound;
+		this.mute = false;
+		this.valueSound = 80;
 	}
 
 	public void playSound(boolean isPause, boolean isLoop) {
@@ -39,7 +38,7 @@ public class Audio {
 	public void start() {
 		if (!clip.isRunning()) {
 			clip.setMicrosecondPosition(0);
-			clip.start();			
+			clip.start();
 		}
 	}
 

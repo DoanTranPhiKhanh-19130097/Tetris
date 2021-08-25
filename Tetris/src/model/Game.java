@@ -13,6 +13,7 @@ import translation.TranslateEnglish;
 import translation.Language;
 import translation.TranslateVietNamese;
 import audio.Audio;
+import data.AFileResultPlayer;
 import data.ReadResultPlayers;
 import data.SaveResultPlayers;
 import factory.IShapeFactory;
@@ -20,7 +21,7 @@ import factory.ShapeRandomFactory;
 import obj.AShape;
 import obj.Player;
 import obj.PlayerList;
-import view.language.ILanguage;
+import view.language.ILanguageScreen;
 
 public class Game extends Observable implements IGame {
 
@@ -42,27 +43,36 @@ public class Game extends Observable implements IGame {
 
 	private Audio playSoundtrack;
 	private Audio playEffectMusic;
-	
 
-	private ReadResultPlayers read;
-	private SaveResultPlayers save;
+	private AFileResultPlayer readPlayers;
+	private AFileResultPlayer savePlayer;
 
 	public Game() {
-		playerList = new PlayerList();
+		setUpGame();
+		initFileResultPlayers();
+		initSound();
+	}
+	
+	public void setUpGame() {
 		board = new int[HEIGHT][WIDTH];
 		shapeFactory = new ShapeRandomFactory();
 		pause = true;
 		gameOver = false;
-
 		startTime = System.nanoTime();
 		storeShapes = new ArrayList<AShape>();
-		
-		read = new ReadResultPlayers();
-		save = new SaveResultPlayers();
-		playerList = read.loadPlayerListFromScoreFile("resource/highscore/high_score.txt", this);
+	}
+	
+	public void initFileResultPlayers() {
+		readPlayers = new ReadResultPlayers();
+		savePlayer = new SaveResultPlayers();
+		readPlayers.executeAbilityThisFile("resource/highscore/high_score.txt", this);
+		playerList = readPlayers.getPlayerList();
+	}
+	
+	public void initSound() {
 		try {
-			playSoundtrack = new Audio("resource/sound/bg_music.wav", false, 80);
-			playEffectMusic = new Audio("resource/sound/effect_clear.wav", false, 80);
+			playSoundtrack = new Audio("resource/sound/bg_music.wav");
+			playEffectMusic = new Audio("resource/sound/effect_clear.wav");
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +91,7 @@ public class Game extends Observable implements IGame {
 				}
 			}
 		}
-		
+
 		playSoundtrack.playSound(pause, true);
 		updateToObserver();
 
@@ -118,10 +128,9 @@ public class Game extends Observable implements IGame {
 				if (coords[i][j] != 0 && board[currentShape.getY() + i + 1][currentShape.getX() + j] != 0) {
 					player.setPlaying(false);
 					playerList.add(player);
-					save.saveAchievements(player, "resource/highscore/high_score.txt");
+					savePlayer.executeAbilityThisFile("resource/highscore/high_score.txt", player);
 					gameOver = true;
 					break;
-					
 				}
 			}
 		}

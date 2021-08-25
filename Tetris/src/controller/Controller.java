@@ -1,9 +1,13 @@
 package controller;
 
+import java.io.IOException;
 import java.util.Observable;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
+import audio.Audio;
 import translation.Language;
 import model.IGame;
 import view.high_score.HighScore;
@@ -12,12 +16,13 @@ import view.home.HomeScreen;
 import view.home.IHome;
 import view.ingame.IInGame;
 import view.ingame.InGameScreen;
-import view.language.ILanguage;
+import view.language.ILanguageScreen;
 import view.language.LanguageScreen;
 import view.pause.IPause;
 import view.pause.PauseScreen;
 import view.setting.ISetting;
 import view.setting.Setting;
+import view.tutorial.ITutorial;
 import view.tutorial.Tutorial;
 
 public class Controller implements IController {
@@ -27,8 +32,8 @@ public class Controller implements IController {
 	private IHome home;
 	private IHighScore highScore;
 	private ISetting setting;
-	private ILanguage translation;
-	private Tutorial tutorial;
+	private ILanguageScreen translation;
+	private ITutorial tutorial;
 	private Language lan = Language.getInstance(); // set up language
 
 	public Controller(IGame model) {
@@ -38,7 +43,7 @@ public class Controller implements IController {
 		highScore = new HighScore(this, (Observable) model, (Observable) lan);
 		setting = new Setting(this, (Observable) model, (Observable) lan);
 		tutorial = new Tutorial((Observable) lan);
-		translation = new LanguageScreen(this);
+		translation = new LanguageScreen(this, (Observable) lan);
 		lan.changeLanguage(); // lấy default language cho observer
 	}
 
@@ -131,6 +136,7 @@ public class Controller implements IController {
 			inGame.disposeInGame();
 			home = new HomeScreen(this, (Observable) lan);
 			lan.changeLanguage(); // user chỉ chọn language trong ingame nên lan gọi lại update cho home
+			pause.dispose();
 			return true;
 		} else {
 			if (!pause.isShow()) {
@@ -151,11 +157,12 @@ public class Controller implements IController {
 
 		if (op == JOptionPane.YES_OPTION)
 			System.exit(0);
-		else if (!pause.isShow()) {
+		
+		else if (!pause.isShow() && !home.isDisplay()) {
 			model.resume();
 			if (inGame != null)
 				inGame.requestFocus();
-		}
+		}		
 	}
 
 	@Override

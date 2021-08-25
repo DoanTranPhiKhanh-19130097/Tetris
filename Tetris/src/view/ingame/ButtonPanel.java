@@ -30,7 +30,6 @@ public class ButtonPanel extends JPanel implements MouseListener, Observer {
 	private IInGame view;
 	private JButton newGame, pause, home, exit;
 	private JLabel title;
-	private JPanel soundPn;
 
 	public ButtonPanel(IInGame view, Observable observableModel, Observable observableLanguage) {
 		observableModel.addObserver(this);

@@ -30,13 +30,13 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 	private JLabel title, nameLb, backgoundLb;
 	private JTextField nameTf;
 	private JButton start, highScore, setting, tutorial, language, exit;
-	private JPanel namePn, btnPn, contenPn;
-	private Graphics2D g;
+	private JPanel namePn, btnPn, contentPn;
+	private Graphics2D graphic;
 
 	public HomeScreen(IController controller, Observable observableLanguage) {
 		this.controller = controller;
 		observableLanguage.addObserver(this);
-
+		
 		// swing
 		add(backgoundLb = new JLabel(new ImageIcon("resource/img/background_tetris.png")));
 		backgoundLb.setLayout(null);
@@ -49,7 +49,7 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 		displayButtons();
 	}
 
-	private void setFrame() {
+	public void setFrame() {
 		setTitle("TETRIS");
 		setIconImage(new ImageIcon("resource/img/iconGame.png").getImage());
 		setVisible(true);
@@ -223,4 +223,8 @@ public class HomeScreen extends JFrame implements MouseListener, IHome, Observer
 		}
 	}
 
+	@Override
+	public boolean isDisplay() {
+		return super.isDisplayable();
+	}
 }

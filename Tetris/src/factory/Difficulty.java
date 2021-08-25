@@ -9,9 +9,9 @@ public class Difficulty implements DifficultyFactory {
 		else if (score > 15000)
 			return 100;
 		else if (score > 12000)
-			return 200;
-		else if (score > 8000)
 			return 300;
+		else if (score > 8000)
+			return 350;
 		else if (score > 5000)
 			return 400;
 		else if (score > 3000)

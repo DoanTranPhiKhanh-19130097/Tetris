@@ -47,7 +47,7 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 
 	}
 
-	private void setFrame() {
+	public void setFrame() {
 		setLayout(new FlowLayout());
 		this.getContentPane().setBackground(new Color(189, 215, 255));
 		setSize(500, 705);
@@ -109,15 +109,12 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 			Game game = (Game) o;
 			players = game.getPlayerList();
 			if (players != null)
-				sort();
+				players.sort();
 			repaint();
 		}
 	}
 
-	@Override
-	public void sort() {
-		players.sort();
-	}
+	
 
 	private void updateLanguage(Observable o) {
 		if (o instanceof Language) {
@@ -132,11 +129,6 @@ public class HighScore extends JDialog implements Observer, IHighScore {
 		}
 	}
 
-	private boolean isNullButton() {
-		if (cancleBt != null)
-			return false;
-		return true;
-	}
 
 	private class ContentPn extends JPanel {
 

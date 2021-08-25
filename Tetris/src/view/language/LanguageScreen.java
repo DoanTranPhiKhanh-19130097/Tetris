@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -25,7 +26,7 @@ import controller.IController;
 import model.Game;
 import view.pause.IPause;
 
-public class LanguageScreen extends JDialog implements ILanguage, MouseListener {
+public class LanguageScreen extends JDialog implements ILanguageScreen, MouseListener, Observer {
 
 	private IController controller;
 	private JLabel title;
@@ -33,7 +34,8 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 	private JPanel btnPn;
 	private boolean show;
 
-	public LanguageScreen(IController controller) {
+	public LanguageScreen(IController controller, Observable observableLanguage) {
+		observableLanguage.addObserver(this);
 		this.controller = controller;
 
 		addWindowListener(new WindowAdapter() {
@@ -128,12 +130,12 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (english == e.getSource())
-			translateEnglish();
+			controller.tranlateEnglish();
 		if (vietnamese == e.getSource()) {
-			translateVietnamese();
+			controller.tranlateVietnamese();
 		}
 		if (chinese == e.getSource())
-			translateChinese();
+			controller.tranlateChinese();
 	}
 
 	@Override
@@ -167,39 +169,20 @@ public class LanguageScreen extends JDialog implements ILanguage, MouseListener 
 	}
 
 	@Override
-	public void translateEnglish() {
-		this.setTitle("LANGUAGE");
-		title.setText("LANGUAGE");
-		english.setText("ENGLISH");
-		vietnamese.setText("VIETNAMESE");
-		chinese.setText("CHINESE");
-		cancleBt.setText("CANCLE");
-
-		controller.tranlateEnglish();
+	public void update(Observable o, Object arg) {
+		updateLanguage(o);
 	}
 
-	@Override
-	public void translateVietnamese() {
-		this.setTitle("NGÔN NGỮ");
-		title.setText("NGÔN NGỮ");
-		english.setText("TIẾNG ANH");
-		vietnamese.setText("TIẾNG VIỆT");
-		chinese.setText("TIẾNG TRUNG");
-		cancleBt.setText("HỦY");
-
-		controller.tranlateVietnamese();
-	}
-
-	@Override
-	public void translateChinese() {
-		this.setTitle("語");
-		title.setText("語");
-		english.setText("英語");
-		vietnamese.setText("越南人");
-		chinese.setText("中國人");
-		cancleBt.setText("取消");
-
-		controller.tranlateChinese();
+	private void updateLanguage(Observable o) {
+		if (o instanceof Language) {
+			Language lan = (Language) o;
+			this.setTitle(lan.getTutorialName());
+			title.setText(lan.getTutorialName());
+			english.setText(lan.getEnglishNameBtn());
+			vietnamese.setText(lan.getVietNameseNameBtn());
+			chinese.setText(lan.getChineseNameBtn());
+			cancleBt.setText(lan.getCancleName());
+		}
 	}
 
 }
