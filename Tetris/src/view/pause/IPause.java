@@ -1,6 +1,7 @@
 package view.pause;
+import view.high_score.IView;
 
-public interface IPause {
+public interface IPause extends IView {
 	public void resume();
 	public void show();
 	public boolean isShow();
